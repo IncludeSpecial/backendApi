@@ -38,9 +38,13 @@ app.use(express.json({ limit: "256kb" }));
 const dbPath = path.join(__dirname, "data.db");
 const db = new Database(dbPath);
 
+const ALLOWED_TABLES = new Set(["users", "entries", "content"]);
+const ALLOWED_COLS = new Set(["role", "username", "display_name", "bio", "avatar_url", "user_id"]);
+
 function colExists(table, col) {
+  if (!ALLOWED_TABLES.has(table) || !ALLOWED_COLS.has(col)) return false;
   try {
-    const cols = db.prepare(`PRAGMA table_info(${table})`).all();
+    const cols = db.prepare(`PRAGMA table_info("${table}")`).all();
     return cols.some((c) => c.name === col);
   } catch {
     return false;
@@ -987,6 +991,10 @@ const server = app.listen(PORT, () => {
   console.log(`API server http://localhost:${PORT}`);
 });
 server.on("error", (e) => {
-  console.error("API server error:", e);
+  if (e.code === "EADDRINUSE") {
+    console.error(`Port ${PORT} is already in use. Set API_PORT to use another port.`);
+  } else {
+    console.error("API server error:", e);
+  }
 });
 
