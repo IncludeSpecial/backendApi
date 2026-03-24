@@ -25,8 +25,3 @@ npm start
 | `ADMIN_EMAIL` | Email админ-аккаунта |
 | `ADMIN_PASSWORD` | Пароль админ-аккаунта |
 
-## Деплой на api.ne-nas.ru
-
-1. Настрой DNS: A-запись или CNAME для `api.ne-nas.ru` на хост
-2. Установи переменные окружения
-3. Для cookies с tools.ne-nas.ru: `COOKIE_DOMAIN=.ne-nas.ru`
